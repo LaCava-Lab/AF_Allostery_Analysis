@@ -1,0 +1,54 @@
+[{
+ "name": "seed42_PTMS_minus20x",
+ "modelSeeds": [
+  "42"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "DWVIPPISCPENEKGPFPKNLVQIKSNKDKEGKVFYSITGQGADTPPVGVFIIERETGWLKVTEPLDRERIATYTLFSHAVSSNGNAVEDPMEILITVTDQNDNKPEFTQEVFKGSVMEGALPGTSVMEVTATDADDDVNTYNAAIAYTILSQDPELPDKNMFTINRNTGVISVVTTGLDRESFPTYTLVVQAADLQGEGLSTTATAVITVTDTNDNPPIFNPTTYKGQVPENEANVVITTLKVTDADAPNTPAWEAVYTILNDDGGQFVVTTNPVNNDGILKTAKGLDFEAKQQYILHVAVTNVVPFEVSLTTSTATVTVDVLDVNEAPIFVPPEKRVEVSEDFGVGQEITSYTAQEPDTFMEQKITYRIWRDTANWLEINPDTGAISTRAELDREDFEHVKNSTYTALIIATDNGSPVATGTGTLLLILSDVNDNAPIPEPRTIFFCERNPKPQVINIIDADLPPNTSPFTAELTHGASANWTIQYNDPTQESIILKPKMALEVGDYKINLKLMDNQNKDQVTTLEVSVCDCEGAAGV",
+    "glycans": [
+     {
+      "residues": "BMA",
+      "position": 126
+     },
+     {
+      "residues": "BMA",
+      "position": 314
+     },
+     {
+      "residues": "MAN",
+      "position": 316
+     },
+     {
+      "residues": "BMA",
+      "position": 318
+     },
+     {
+      "residues": "BMA",
+      "position": 422
+     },
+     {
+      "residues": "MAN",
+      "position": 424
+     },
+     {
+      "residues": "BMA",
+      "position": 426
+     }
+    ],
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "ion": {
+    "ion": "CA",
+    "count": 12
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

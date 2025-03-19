@@ -1,0 +1,53 @@
+[{
+ "name": "seed29_NOCA",
+ "modelSeeds": [
+  "29"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "DWVIPPISCPENEKGPFPKNLVQIKSNKDKEGKVFYSITGQGADTPPVGVFIIERETGWLKVTEPLDRERIATYTLFSHAVSSNGNAVEDPMEILITVTDQNDNKPEFTQEVFKGSVMEGALPGTSVMEVTATDADDDVNTYNAAIAYTILSQDPELPDKNMFTINRNTGVISVVTTGLDRESFPTYTLVVQAADLQGEGLSTTATAVITVTDTNDNPPIFNPTTYKGQVPENEANVVITTLKVTDADAPNTPAWEAVYTILNDDGGQFVVTTNPVNNDGILKTAKGLDFEAKQQYILHVAVTNVVPFEVSLTTSTATVTVDVLDVNEAPIFVPPEKRVEVSEDFGVGQEITSYTAQEPDTFMEQKITYRIWRDTANWLEINPDTGAISTRAELDREDFEHVKNSTYTALIIATDNGSPVATGTGTLLLILSDVNDNAPIPEPRTIFFCERNPKPQVINIIDADLPPNTSPFTAELTHGASANWTIQYNDPTQESIILKPKMALEVGDYKINLKLMDNQNKDQVTTLEVSVCDCEGAAGV",
+    "glycans": [
+     {
+      "residues": "BMA",
+      "position": 126
+     },
+     {
+      "residues": "MAN",
+      "position": 204
+     },
+     {
+      "residues": "BMA",
+      "position": 206
+     },
+     {
+      "residues": "BMA",
+      "position": 314
+     },
+     {
+      "residues": "MAN",
+      "position": 316
+     },
+     {
+      "residues": "BMA",
+      "position": 318
+     },
+     {
+      "residues": "BMA",
+      "position": 422
+     },
+     {
+      "residues": "MAN",
+      "position": 424
+     },
+     {
+      "residues": "BMA",
+      "position": 426
+     }
+    ],
+    "count": 1
+   }
+  }
+ ]
+}
+]
