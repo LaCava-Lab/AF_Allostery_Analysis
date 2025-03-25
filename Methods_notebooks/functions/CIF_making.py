@@ -5,7 +5,7 @@ from numpy import array,dot
 from MDAnalysis.analysis import align
 import pandas as pd
 from functions.CIF_Functions import make_df_atomlist,hetatm_df,make_df_new
-from functions.Sliding_Functions import local_rmsd_plotter
+from functions.Sliding_Functions import local_rmsd_plotter,get_significance
 
 def align_by_subsection(df_a,df_b,rel_sub_start:int,rel_sub_end:int):
     """Function aligns coordinate arrays or dataframes over a subset  
@@ -79,14 +79,8 @@ def align_color_cif(CIF_PATH,CHAIN):
     win = 25*len(atomlist) # 25 residues
     _,y1,_ = local_rmsd_plotter(ptm_df,crystal_df,stepsize=1,win_size=win)
     _,y2,_ = local_rmsd_plotter(noptm_df,crystal_df,stepsize=1,win_size=win)
-    # Plot the difference
-    data = array(y2)-array(y1)
-    # Remove outliers formed by the 5 initial values at the beginning of prediction and make the colourlist
-    data_truncated = [i for i in data if i>-.5 and i<.5]
-    sym_neg_data = [i for i in data_truncated if i<0] + [-1*i for i in data_truncated if i<0]
-    sig3 = 3*np.std(sym_neg_data)
-    sig2 = 2*np.std(sym_neg_data)
-    colorlist= ["red" if i> sig3 or i< -sig3 else "orange" if i> sig2 or i< -sig2 else "blue" for i in data]
+
+    colorlist= get_significance(y1,y2)
     # The sliding window function starts its value halfway in the window so the first and last 37 atoms are informationsless, so we color them insignificant
     colorlist = ["blue" for _ in range(37)] + colorlist + ["blue" for _ in range(37)]
 
@@ -94,7 +88,7 @@ def align_color_cif(CIF_PATH,CHAIN):
     #full_ptm_df,sequenceA = make_df_new("cif_files/Predictions/SEEDMATCHED/fold_adnan_seed42_ptms/fold_adnan_seed42_ptms_model_3.cif")
     full_ptm_df,_ = make_df_new(CIF_PATH)
     #full_noptm_df,_ = make_df_new("cif_files/Predictions/SEEDMATCHED/fold_adnan_seed1_noptms/fold_adnan_seed1_noptms_model_1.cif")
- 
+
     # Read xyz
     f_ptm_df = full_ptm_df[0] 
     #f_noptm_df = full_noptm_df[0]
@@ -172,11 +166,11 @@ def align_to_noptms(CIF_PATH,CHAIN):
     #full_ptm_df,sequenceA = make_df_new("cif_files/Predictions/SEEDMATCHED/fold_adnan_seed42_ptms/fold_adnan_seed42_ptms_model_3.cif")
     full_ptm_df,_ = make_df_new(CIF_PATH)
     # Read xyz
-    f_ptm_df = full_ptm_df[0] 
+    f_ptm_df = full_ptm_df[0]
     tb_aligned_a = array(f_ptm_df[f_ptm_df.columns[10:13]]).astype(float)
     # mean center on the aligned part
     mc_a = tb_aligned_a - mcA
-    # run the alignment 
+    # run the alignment
     aligned_a = dot(mc_a,np.transpose(R))
 
 # Column B factor changing

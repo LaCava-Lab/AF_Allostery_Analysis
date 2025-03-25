@@ -1,8 +1,14 @@
+"""
+Module for sliding functions
+
+"""
 import numpy as np
 import pandas as pd
 from numpy import array,dot
-from MDAnalysis.analysis import align  
+from MDAnalysis.analysis import align
 from MDAnalysis.analysis.rms import rmsd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def local_rmsd_plotter(df_a :pd.DataFrame,
                        df_b :pd.DataFrame,
@@ -20,7 +26,7 @@ def local_rmsd_plotter(df_a :pd.DataFrame,
     #    print(f"Inconsistent length of window, pick {find_step_size(len(df_a),win_size)}")
     #    return 0,0
     assert len(df_a) == len(df_b), "Sequences are differing length"
-     
+
     win_start = 0
     win_end = 0
     score_list = []
@@ -66,12 +72,12 @@ def global_rmsd_plotter(df_a,
         list of residue indexes , list of RMSD's
     """
      # type changing
-    if type(df_a)==pd.DataFrame:
+    if isinstance(df_a,pd.DataFrame):
         x = array(df_a[df_a.columns[10:13]]).astype(float)
     else:
         x = df_a
-    
-    if type(df_b) ==pd.DataFrame:
+
+    if isinstance(df_b,pd.DataFrame):
         y = array(df_b[df_b.columns[10:13]]).astype(float)
     else:
         y= df_b
@@ -110,7 +116,6 @@ def global_rmsd_plotter(df_a,
         win_start+=stepsize
     return start_list,gbl_rmsd_list,grms
 
-from MDAnalysis.analysis.rms import rmsd
 
 def local_rmsd_plotter_no_aligning(array_a,
                        array_b,
@@ -154,7 +159,8 @@ def local_rmsd_plotter_no_aligning(array_a,
  
     return start_list,rmsd_list
 
-def get_significance(x,y1,y2):
+
+def get_significance(y1,y2,plots=False):
     """Function calculates sigmas and colours accordingly
     Args:
        rmsd lists y1 and y2 to take a delta from 
@@ -162,13 +168,34 @@ def get_significance(x,y1,y2):
     Returns:
         colourlist of length data
     """
+    # Subtracting
     data = array(y2)-array(y1)
-    # Remove outliers formed by the 5 initial values at the beginning of prediction
-    data_truncated = [i for i in data if i>-.5 and i<.5]
-    sym_neg_data = [i for i in data_truncated if i<0] + [-1*i for i in data_truncated if i<0]
 
-    # Plot this symetrical density plot
-    sig3 = 3*np.std(sym_neg_data)
-    sig2 = 2*np.std(sym_neg_data)
+    # if the data cannot have a density return all insignificant
+    if all(v == 0 for v in data):
+        return ["blue" for _ in data]
+    # Get fitted y values but close the plot so it doesnt show
+    fig = plt.figure()
+    x,y = sns.kdeplot(data).lines[0].get_data()
+    plt.close(fig)
 
-    return ["red" if i> sig3 or i< -sig3 else "orange" if i> sig2 or i< -sig2 else "b" for i in data]
+    x = array(x)
+    y = array(y)
+
+    densplot = [(i[0],i[1]) for i in zip(x,y)]
+    sym_neg = array([i for i in densplot if i[0]<0] + [(-1*i[0],i[1]) for i in densplot[::-1] if i[0]<0])
+    x_vals = array(sym_neg)[:,0]
+    y_vals = array(sym_neg)[:,1]
+
+    variance = np.sum((x_vals)**2 * y_vals) / np.sum(y_vals)
+    sig = np.sqrt(variance)
+
+    # show plots if true
+    if plots:
+        plt.plot(x_vals,y_vals)
+        plt.vlines([2*sig,3*sig],0,1,color="blue")
+        plt.show()
+ 
+    ls = ["red" if i> sig*3 or i< -sig*3 else "orange" if i> sig*2 or i< -sig*2 else "b" for i in data]
+
+    return ls
