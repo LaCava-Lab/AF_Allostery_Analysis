@@ -1,3 +1,5 @@
+"""This module turns CIF files into readable pandas dataframes"""
+
 # Functions used in panda notebook and abstracted for use
 
 # import modules
