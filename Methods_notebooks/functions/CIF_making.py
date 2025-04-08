@@ -48,7 +48,7 @@ def align_by_subsection(df_a,df_b,rel_sub_start:int,rel_sub_end:int):
     return array(x_f),array(y_f),rms,rot_matrix,mean_centre_a,mean_centre_b
 
 
-def align_color_cif(CIF_PATH,CHAIN):
+def align_color_cif(CIF_PATH,CHAIN,align_start=72,align_end=115,sign_compared = "cif_files/Predictions/SEEDMATCHED/fold_adnan_seed1_noptms/fold_adnan_seed1_noptms_model_1.cif"):
     """Takes crystal, and noptm crystal align them to a reference (7stz) and colour  
     
     Args:
@@ -67,18 +67,20 @@ def align_color_cif(CIF_PATH,CHAIN):
     # Select the first 2 domains (roughly) (speed increase for alignment)
     STOP = 600 # arbitrary
     df_a,df_b = ptm_df[:STOP],noptm_df[:STOP]
-    align_start = 72*3
-    align_end   = 115*3  # needs to be relative to the start of the full protein
+    align_start = align_start*3
+    align_end   = align_end*3  # needs to be relative to the start of the full protein
     _,_,_,R,mcA,mcB = align_by_subsection(df_a,df_b,align_start,align_end)
     # this gives us the rotational and tranlational information to apply to the full molecule later in the function
-
 
 # Coloring
 
     # Do sliding window to get significant difference peeks
     win = 25*len(atomlist) # 25 residues
+    # define what to calculate the significance over
+    significance_df = make_df_atomlist(sign_compared,atomlist)
+
     _,y1,_ = local_rmsd_plotter(ptm_df,crystal_df,stepsize=1,win_size=win)
-    _,y2,_ = local_rmsd_plotter(noptm_df,crystal_df,stepsize=1,win_size=win)
+    _,y2,_ = local_rmsd_plotter(significance_df,crystal_df,stepsize=1,win_size=win)
 
     colorlist= get_significance(y1,y2)
     # The sliding window function starts its value halfway in the window so the first and last 37 atoms are informationsless, so we color them insignificant
