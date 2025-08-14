@@ -10,7 +10,7 @@ from MDAnalysis.analysis.rms import rmsd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def local_rmsd_plotter(df_a :pd.DataFrame,
+def slow_local_rmsd_plotter(df_a :pd.DataFrame,
                        df_b :pd.DataFrame,
                        stepsize=2,
                        win_size=10) -> tuple[list[int],list[int],list[int]]:
@@ -58,6 +58,50 @@ def local_rmsd_plotter(df_a :pd.DataFrame,
         win_start+=stepsize
         
     return start_list,rmsd_list,score_list
+
+
+def local_rmsd_plotter(df_a: pd.DataFrame,
+                       df_b: pd.DataFrame,
+                       stepsize: int = 1,
+                       win_size: int = 75) -> tuple[list[int], list[float], list[float]]:
+    """Calculate aligned RMSD over a sliding window.
+
+    Args:
+        df_a, df_b: Equally indexed dataframes with coordinates in columns [10:13].
+        stepsize: Step size for moving the window.
+        win_size: Size of the sliding window.
+
+    Returns:
+        Tuple containing:
+            - list of window center residue indices,
+            - list of RMSD values,
+            - list of placeholder scores (empty if unused).
+    """
+    assert len(df_a) == len(df_b), "Sequences are differing length"
+
+    coords_a = df_a.iloc[:, 10:13].to_numpy(dtype=float)
+    coords_b = df_b.iloc[:, 10:13].to_numpy(dtype=float)
+
+    n_points = len(coords_a)
+    start_indices = np.arange(0, n_points - win_size + 1, stepsize)
+
+    rmsd_list = []
+    center_list = []
+
+    for start in start_indices:
+        end = start + win_size
+        window_a = coords_a[start:end]
+        window_b = coords_b[start:end]
+
+        # Mean centering
+        window_a_centered = window_a - np.mean(window_a, axis=0)
+        window_b_centered = window_b - np.mean(window_b, axis=0)
+
+        _, rms = align.rotation_matrix(window_a_centered, window_b_centered)
+        rmsd_list.append(rms)
+        center_list.append(start + win_size // 2)
+
+    return center_list, rmsd_list, []  # Score list placeholder
 
 
 def global_rmsd_plotter(df_a,

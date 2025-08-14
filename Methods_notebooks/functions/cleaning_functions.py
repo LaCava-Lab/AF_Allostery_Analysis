@@ -150,3 +150,27 @@ def plot3d_a(a):
     # Adding vertical lines at z = 0
     
     plotly.offline.iplot(plot_figure)
+
+
+from Bio.PDB import MMCIFParser, PDBIO
+import os
+
+
+def convert_mmcif_to_pdb(input_file, output_file=None):
+    # set parser
+    parser = MMCIFParser(QUIET=True)
+
+    # set structure
+    structure_id = os.path.basename(input_file).split('.')[0]
+    structure = parser.get_structure(structure_id, input_file)
+
+    # default to same folder
+    if output_file is None:
+        output_file = os.path.splitext(input_file)[0] + ".pdb"
+
+    # write
+    io = PDBIO()
+    io.set_structure(structure)
+    io.save(output_file)
+    print(f"Saved PDB file to: {output_file}")
+
